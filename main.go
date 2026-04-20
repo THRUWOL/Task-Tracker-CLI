@@ -3,45 +3,52 @@ package main
 import (
 	"fmt"
 	"os"
+	"task-tracker/commands"
 )
 
-var helpInfo = 
-`------------------------------------------------------
-| <command>        | description                     |
-------------------------------------------------------
-| add              | Adding a new task               |
-| update           | Updating tasks                  |
-| delete           | Delete tasks                    |
-| mark-in-progress | Marking a task as in progress   |
-| mark-done        | Marking a task as done          |
-| list             | Listing all tasks               |
-| list <status>    | Listing task by status.         |
-|                  | Status: done, todo, in-progress |
-------------------------------------------------------`
+func printHelp() {
+	var helpInfo = `----------------------------------------------------------
+| <command> <args>      | description                     |
+-----------------------------------------------------------
+| add <description>     | Adding a new task               |
+| update <id>           | Updating tasks by id            |
+| delete <id>           | Delete tasks by id              |
+| mark-in-progress <id> | Marking a task as in progress   |
+| mark-done <id>        | Marking a task as done          |
+| list             		| Listing all tasks               |
+| list <status>   		| Listing task by status.         |
+|                 		| Status: done, todo, in-progress |
+-----------------------------------------------------------`
+	fmt.Println(helpInfo)
+}
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println(helpInfo)
-		return
+		printHelp()
+		os.Exit(1)
 	}
 
 	command := os.Args[1]
+	args := os.Args[2:]
 
 	switch command {
-		case "help", "man", "-h", "info", "-m":
-			fmt.Println(helpInfo)
-		case "add":
-			//todo add
-		case "update":
-			//todo update
-		case "delete":
-			//todo delete
-		case "mark":
-			//todo
-		case "list":
-			//todo
-		default:
-			fmt.Println("Unknown command: ", command)
+	case "add":
+		commands.Add(args)
+	case "update":
+		commands.Update(args)
+	case "delete":
+		commands.Delete(args)
+	case "mark-in-progress":
+		commands.MarkInProgress(args)
+	case "mark-done":
+		commands.MarkDone(args)
+	case "list":
+		commands.List(args)
+	case "help":
+		printHelp()
+	default:
+		fmt.Printf("Неизвестная команда: %s\n", command)
+		printHelp()
+		os.Exit(1)
 	}
-
 }
